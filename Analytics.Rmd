@@ -22,3 +22,11 @@ df <- read.csv(file='strategies/training_data.csv')
 head(df)
 ```
 
+Convert position_type column to 1s and 0s 
+
+```{r}
+df$position_type <- as.integer(as.logical(df$position_type=="long", 1, -1))
+head(df)
+
+```
+
