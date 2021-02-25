@@ -25,8 +25,8 @@ head(df)
 Convert position_type column to 1s and 0s 
 
 ```{r}
-df$position_type <- as.integer(as.logical(df$position_type=="long", 1, -1))
-df$outcome <- as.integer(as.logical(df$outcome=="True", 1, -1))
+df$position_type <- as.integer(as.logical(df$position_type=="long"))
+df$outcome <- as.logical(df$outcome=="True")
 head(df)
 
 ```
