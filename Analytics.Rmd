@@ -22,12 +22,17 @@ df <- read.csv(file='strategies/training_data.csv')
 head(df)
 ```
 
-Convert position_type column to 1s and 0s 
+
+Complete the following actions:
+1) Convert position_type column to 1s and 0s
+2) Convert outcome column from string to boolean
+3) Drop previous index and timestamp columns 
 
 ```{r}
 df$position_type <- as.integer(as.logical(df$position_type=="long"))
 df$outcome <- as.logical(df$outcome=="True")
+df = subset(df, select = -c(X,timestamp) )
 head(df)
-
 ```
 
+End
