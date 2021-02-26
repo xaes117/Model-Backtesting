@@ -35,4 +35,17 @@ df = subset(df, select = -c(X,timestamp) )
 head(df)
 ```
 
+Normalize dataframe using a min-max scaler 
+
+```{r}
+min_max_scaler <- function(df)
+{
+    return((df- min(df)) /(max(df)-min(df)))
+}
+
+df = as.data.frame(lapply(df, min_max_scaler))
+head(df)
+
+```
+
 End
