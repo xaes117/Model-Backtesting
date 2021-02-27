@@ -54,5 +54,23 @@ Randomly shuffle rows
 df <- df[sample(nrow(df)),]
 head(df)
 ```
+split data into test and train
+- 85% training data
+- 15% test validation
+
+```{r}
+# set seed
+set.seed(1)
+
+# set training data to 85% of original data frame  
+sample <- sample.int(n = nrow(df), size = floor(0.85*nrow(df)), replace = F)
+
+train_data <- df[sample, ]
+test_data  <- df[-sample, ]
+
+cat("size of training data: ", nrow(train_data))
+cat("\nsize of test data: ", nrow(test_data))
+
+```
 
 End
