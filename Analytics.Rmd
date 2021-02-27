@@ -48,4 +48,11 @@ head(df)
 
 ```
 
+Randomly shuffle rows
+
+```{r}
+df <- df[sample(nrow(df)),]
+head(df)
+```
+
 End
