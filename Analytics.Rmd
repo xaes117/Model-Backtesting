@@ -54,6 +54,13 @@ Randomly shuffle rows
 df <- df[sample(nrow(df)),]
 head(df)
 ```
+
+Export dataset to CSV
+
+```{r}
+write.csv(df,"normalized_df.csv", row.names = FALSE)
+```
+
 split data into test and train
 - 85% training data
 - 15% test validation
