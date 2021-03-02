@@ -80,4 +80,9 @@ cat("\nsize of test data: ", nrow(test_data))
 
 ```
 
+```{r}
+ with(df ,plot(vix_close,outcome))
+
+```
+
 End
