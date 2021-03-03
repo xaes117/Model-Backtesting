@@ -50,7 +50,7 @@ class RsiStrategy:
         pre_trades = []
 
         # prelimenary variables
-        stoploss = 0.01
+        stoploss = 0.1
         activeTrade = False
         currentTrade = []
 
