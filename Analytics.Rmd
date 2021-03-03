@@ -68,13 +68,5 @@ cat("\nsize of test data: ", nrow(test_data))
 
 ```
 
-```{r}
- with(df ,plot(vix_close,outcome))
- with(df ,plot(rsi,outcome))
- with(df ,plot(us10y_rsi,outcome))
- with(df ,plot(rsi_delta,outcome))
- with(df ,plot(dxy_rsi,outcome))
-
-```
 
 End

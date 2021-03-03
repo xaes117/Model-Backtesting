@@ -1,0 +1,20 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+df <- read.csv(file='normalized_df.csv')
+tail(df)
+
+
+```
+
+
+```{r}
+ with(df ,plot(vix_close,outcome))
+ with(df ,plot(rsi,outcome))
+ with(df ,plot(us10y_rsi,outcome))
+ with(df ,plot(rsi_delta,outcome))
+ with(df ,plot(dxy_rsi,outcome))
+```
