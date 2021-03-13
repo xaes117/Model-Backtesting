@@ -9,9 +9,6 @@ head(df)
 ```
 
 
-split data into test and train
-- 85% training data
-- 15% test validation
 
 ```{r}
 #install.packages("caret", dependencies=TRUE)
@@ -19,6 +16,10 @@ library(gbm)          # basic implementation
 library(caret)
 
 getModelInfo()$gbm$type
+
+outcomeName <- 'outcome'
+predictorsNames <- names(df)[names(df) != outcomeName]
+
 
 df$outcome2 <- ifelse(df$outcome==1,'yes','no')
 df$outcome2 <- as.factor(df$outcome2)
@@ -37,10 +38,25 @@ testDF  <- df[-splitIndex,]
 
 ```{r}
 
+objControl <- trainControl(method='cv', 
+                           number=3, 
+                           returnResamp='none', 
+                           summaryFunction = twoClassSummary, 
+                           classProbs = TRUE)
+
+objModel <- train(trainDF[,predictorsNames], trainDF[,outcomeName], 
+                  method='gbm', 
+                  trControl=objControl,  
+                  metric = "ROC",
+                  preProc = c("center", "scale"))
+
+summary(objModel)
+
 ```
 
 
 ```{r}
+print(objModel)
 
 ```
 
