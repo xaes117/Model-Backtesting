@@ -1,0 +1,75 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+df <- read.csv(file='normalized_df.csv')
+head(df)
+```
+
+
+split data into test and train
+- 85% training data
+- 15% test validation
+
+```{r}
+# set seed
+set.seed(1)
+
+# set training data to 85% of original data frame  
+sample <- sample.int(n = nrow(df), size = floor(0.85*nrow(df)), replace = F)
+
+train_data <- df[sample, ]
+test_data  <- df[-sample, ]
+
+cat("size of training data: ", nrow(train_data))
+cat("\nsize of test data: ", nrow(test_data))
+
+```
+
+
+```{r}
+#install.packages("gbm", dependencies=TRUE)
+library(gbm)          # basic implementation
+
+ames_gbm1 <- gbm(
+  formula = outcome ~ .,
+  data = df,
+  distribution = "gaussian",  # SSE loss function
+  n.trees = 5000,
+  shrinkage = 0.1,
+  interaction.depth = 3,
+  n.minobsinnode = 10,
+  cv.folds = 10
+)
+
+# find index for number trees with minimum CV error
+best <- which.min(ames_gbm1$cv.error)
+
+# get MSE and compute RMSE
+sqrt(ames_gbm1$cv.error[best])
+
+# plot error curve
+gbm.perf(ames_gbm1, method = "cv")
+
+
+```
+
+```{r}
+
+```
+
+
+```{r}
+
+```
+
+
+```{r}
+
+```
+
+```{r}
+
+```
