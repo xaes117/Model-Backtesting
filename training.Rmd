@@ -57,14 +57,15 @@ summary(objModel)
 
 ```{r}
 print(objModel)
-
 ```
 
 
 ```{r}
-
+predictions <- predict(object=objModel, testDF[,predictorsNames], type='raw')
+head(predictions)
 ```
 
 ```{r}
+
 
 ```
