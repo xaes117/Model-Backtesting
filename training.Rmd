@@ -79,3 +79,26 @@ head(predictions)
 auc <- roc(ifelse(testDF[,outcomeName]=="yes",1,0), predictions[[2]])
 print(auc$auc)
 ```
+
+
+```{r}
+getModelInfo()$glmnet$type
+## [1] "Regression"     "Classification"
+outcomeName <- 'outcome'
+
+set.seed(1234)
+splitIndex <- createDataPartition(df[,outcomeName], p = .85, list = FALSE, times = 1)
+trainDF <- df[ splitIndex,]
+testDF  <- df[-splitIndex,]
+
+
+objControl <- trainControl(method='cv', number=3, returnResamp='none')
+objModel <- train(trainDF[,predictorsNames], trainDF[,outcomeName], method='glmnet',  metric = "RMSE", trControl=objControl)
+predictions <- predict(object=objModel, testDF[,predictorsNames])
+auc <- roc(testDF[,outcomeName], predictions)
+print(auc$auc)
+```
+
+```{r}
+plot(varImp(objModel,scale=F))
+```
