@@ -66,6 +66,5 @@ head(predictions)
 ```
 
 ```{r}
-
-
+print(postResample(pred=predictions, obs=as.factor(testDF[,outcomeName])))
 ```
