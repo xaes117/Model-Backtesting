@@ -36,7 +36,7 @@ library(gbm)          # basic implementation
 ames_gbm1 <- gbm(
   formula = outcome ~ .,
   data = df,
-  distribution = "gaussian",  # SSE loss function
+  distribution = "bernoulli",  # SSE loss function
   n.trees = 5000,
   shrinkage = 0.1,
   interaction.depth = 3,
