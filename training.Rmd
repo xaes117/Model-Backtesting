@@ -74,3 +74,8 @@ library(pROC)
 predictions <- predict(object=objModel, testDF[,predictorsNames], type='prob')
 head(predictions)
 ```
+
+```{r}
+auc <- roc(ifelse(testDF[,outcomeName]=="yes",1,0), predictions[[2]])
+print(auc$auc)
+```
