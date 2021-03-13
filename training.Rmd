@@ -68,3 +68,9 @@ head(predictions)
 ```{r}
 print(postResample(pred=predictions, obs=as.factor(testDF[,outcomeName])))
 ```
+
+```{r}
+library(pROC)
+predictions <- predict(object=objModel, testDF[,predictorsNames], type='prob')
+head(predictions)
+```
