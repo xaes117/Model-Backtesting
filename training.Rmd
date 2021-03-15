@@ -54,6 +54,9 @@ summary(objModel)
 
 ```
 
+```{r}
+confusionMatrix(objModel)
+```
 
 ```{r}
 print(objModel)
@@ -79,6 +82,7 @@ head(predictions)
 auc <- roc(ifelse(testDF[,outcomeName]=="yes",1,0), predictions[[2]])
 print(auc$auc)
 ```
+
 
 
 ```{r}
