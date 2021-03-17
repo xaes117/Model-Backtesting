@@ -14,6 +14,7 @@ head(df)
 #install.packages("caret", dependencies=TRUE)
 library(gbm)          # basic implementation
 library(caret)
+library(MLeval)
 
 getModelInfo()$gbm$type
 
@@ -42,7 +43,8 @@ objControl <- trainControl(method='cv',
                            number=3, 
                            returnResamp='none', 
                            summaryFunction = twoClassSummary, 
-                           classProbs = TRUE)
+                           classProbs = TRUE,
+                           savePredictions = TRUE)
 
 objModel <- train(trainDF[,predictorsNames], trainDF[,outcomeName], 
                   method='gbm', 
@@ -56,6 +58,9 @@ summary(objModel)
 
 ```{r}
 confusionMatrix(objModel)
+```
+```{r}
+res <- evalm(list(objModel),gnames=c('gbm'))
 ```
 
 ```{r}
