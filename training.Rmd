@@ -88,6 +88,10 @@ auc <- roc(ifelse(testDF[,outcomeName]=="yes",1,0), predictions[[2]])
 print(auc$auc)
 ```
 
+```{r}
+https://machinelearningmastery.com/hyperparameters-for-classification-machine-learning-algorithms/
+```
+
 
 
 ```{r}
