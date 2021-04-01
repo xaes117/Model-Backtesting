@@ -30,8 +30,8 @@ outcomeName <- 'outcome2'
 
 
 ```{r}
-set.seed(1234)
-splitIndex <- createDataPartition(df[,outcomeName], p = .85, list = FALSE, times = 1)
+set.seed(12)
+splitIndex <- createDataPartition(df[,outcomeName], p = .9, list = FALSE, times = 1)
 trainDF <- df[ splitIndex,]
 testDF  <- df[-splitIndex,]
 
@@ -39,9 +39,15 @@ testDF  <- df[-splitIndex,]
 
 ```{r}
 
+mtryGrid <- expand.grid(interaction.depth = seq(1, 7, by = 2),
+                        n.trees = seq(100, 1000, by = 50),
+                        n.minobsinnode = 10,
+                        shrinkage = c(0.01, 0.1))
+
 objControl <- trainControl(method='cv', 
                            number=3, 
                            returnResamp='none', 
+                           search = "grid",
                            summaryFunction = twoClassSummary, 
                            classProbs = TRUE,
                            savePredictions = TRUE)
@@ -50,6 +56,7 @@ objModel <- train(trainDF[,predictorsNames], trainDF[,outcomeName],
                   method='gbm', 
                   trControl=objControl,  
                   metric = "ROC",
+                  tuneGrid = mtryGrid,
                   preProc = c("center", "scale"))
 
 summary(objModel)
@@ -84,34 +91,15 @@ head(predictions)
 ```
 
 ```{r}
-auc <- roc(ifelse(testDF[,outcomeName]=="yes",1,0), predictions[[2]])
-print(auc$auc)
+test_auc <- roc(ifelse(testDF[,outcomeName]=="yes",1,0), predictions[[2]])
+print(test_auc$auc)
+
+print(mean(objModel$results$ROC))
 ```
 
 ```{r}
-https://machinelearningmastery.com/hyperparameters-for-classification-machine-learning-algorithms/
+
 ```
 
 
 
-```{r}
-getModelInfo()$glmnet$type
-## [1] "Regression"     "Classification"
-outcomeName <- 'outcome'
-
-set.seed(1234)
-splitIndex <- createDataPartition(df[,outcomeName], p = .85, list = FALSE, times = 1)
-trainDF <- df[ splitIndex,]
-testDF  <- df[-splitIndex,]
-
-
-objControl <- trainControl(method='cv', number=3, returnResamp='none')
-objModel <- train(trainDF[,predictorsNames], trainDF[,outcomeName], method='glmnet',  metric = "RMSE", trControl=objControl)
-predictions <- predict(object=objModel, testDF[,predictorsNames])
-auc <- roc(testDF[,outcomeName], predictions)
-print(auc$auc)
-```
-
-```{r}
-plot(varImp(objModel,scale=F))
-```
