@@ -1,0 +1,95 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+df <- read.csv(file='normalized_df.csv')
+head(df)
+```
+
+
+
+```{r}
+#install.packages("caret", dependencies=TRUE)
+library(caret)
+library(MLeval)
+
+getModelInfo()$rf$type
+
+outcomeName <- 'outcome'
+predictorsNames <- names(df)[names(df) != outcomeName]
+
+
+df$outcome2 <- ifelse(df$outcome==1,'yes','no')
+df$outcome2 <- as.factor(df$outcome2)
+outcomeName <- 'outcome2'
+
+```
+
+
+```{r}
+set.seed(12)
+splitIndex <- createDataPartition(df[,outcomeName], p = .9, list = FALSE, times = 1)
+trainDF <- df[ splitIndex,]
+testDF  <- df[-splitIndex,]
+
+```
+
+```{r}
+
+mtryGrid <- expand.grid(.mtry = c(1: 2))
+
+objControl <- trainControl(method = "cv",
+                           number = 10,
+                           search = "grid",
+                           classProbs = TRUE)
+
+objModel <- train(trainDF[,predictorsNames], trainDF[,outcomeName], 
+                  method='rf', 
+                  trControl=objControl,  
+                  metric = "ROC",
+                  tuneGrid = mtryGrid,
+                  preProc = c("center", "scale"))
+
+summary(objModel)
+
+```
+
+```{r}
+confusionMatrix(objModel)
+```
+
+```{r}
+print(objModel)
+```
+
+
+```{r}
+predictions <- predict(object=objModel, testDF[,predictorsNames], type='raw')
+head(predictions)
+```
+
+```{r}
+print(postResample(pred=predictions, obs=as.factor(testDF[,outcomeName])))
+```
+
+```{r}
+library(pROC)
+predictions <- predict(object=objModel, testDF[,predictorsNames], type='prob')
+head(predictions)
+```
+
+```{r}
+test_auc <- roc(ifelse(testDF[,outcomeName]=="yes",1,0), predictions[[2]])
+print(test_auc$auc)
+
+print(mean(objModel$results$ROC))
+```
+
+```{r}
+
+```
+
+
+
