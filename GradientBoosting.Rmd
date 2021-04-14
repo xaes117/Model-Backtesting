@@ -1,0 +1,105 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+df <- read.csv(file='normalized_df.csv')
+head(df)
+```
+
+
+
+```{r}
+#install.packages("caret", dependencies=TRUE)
+library(gbm)          # basic implementation
+library(caret)
+library(MLeval)
+
+getModelInfo()$gbm$type
+
+outcomeName <- 'outcome'
+predictorsNames <- names(df)[names(df) != outcomeName]
+
+
+df$outcome2 <- ifelse(df$outcome==1,'yes','no')
+df$outcome2 <- as.factor(df$outcome2)
+outcomeName <- 'outcome2'
+
+```
+
+
+```{r}
+set.seed(12)
+splitIndex <- createDataPartition(df[,outcomeName], p = .9, list = FALSE, times = 1)
+trainDF <- df[ splitIndex,]
+testDF  <- df[-splitIndex,]
+
+```
+
+```{r}
+
+mtryGrid <- expand.grid(interaction.depth = seq(1, 7, by = 2),
+                        n.trees = seq(100, 1000, by = 50),
+                        n.minobsinnode = 10,
+                        shrinkage = c(0.01, 0.1))
+
+objControl <- trainControl(method='cv', 
+                           number=3, 
+                           returnResamp='none', 
+                           search = "grid",
+                           summaryFunction = twoClassSummary, 
+                           classProbs = TRUE,
+                           savePredictions = TRUE)
+
+objModel <- train(trainDF[,predictorsNames], trainDF[,outcomeName], 
+                  method='gbm', 
+                  trControl=objControl,  
+                  metric = "ROC",
+                  tuneGrid = mtryGrid,
+                  preProc = c("center", "scale"))
+
+summary(objModel)
+
+```
+
+```{r}
+confusionMatrix(objModel)
+```
+```{r}
+res <- evalm(list(objModel),gnames=c('gbm'))
+```
+
+```{r}
+print(objModel)
+```
+
+
+```{r}
+predictions <- predict(object=objModel, testDF[,predictorsNames], type='raw')
+head(predictions)
+```
+
+```{r}
+print(postResample(pred=predictions, obs=as.factor(testDF[,outcomeName])))
+```
+
+```{r}
+library(pROC)
+predictions <- predict(object=objModel, testDF[,predictorsNames], type='prob')
+head(predictions)
+```
+
+```{r}
+test_auc <- roc(ifelse(testDF[,outcomeName]=="yes",1,0), predictions[[2]])
+print(test_auc$auc)
+
+print(mean(objModel$results$ROC))
+```
+
+```{r}
+
+```
+
+
+
