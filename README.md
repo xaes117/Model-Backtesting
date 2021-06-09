@@ -1,3 +1,3 @@
-# SOFT7010-Project - Application of Machine Learning to Financial Trading
+# Model Backtesting Project - Application of Machine Learning to Financial Trading
 
 Financial trading is one of the most competitive industries in the world and the application of machine learning techniques for financial trading is as old as the subject of itself. Financial institutions continuously hire the smartest graduates to develop systems for financial trading and the development of machine learning based trading systems is no exception. The task at hand is possibly one of the most challenging topics to develop an effective machine learning system for however the project described in this report shall nonetheless attempt to develop a model that will be able to effectively classify winning and losing trades ahead of time although before continuing it is worth bearing in mind the probability of failure is very high.
